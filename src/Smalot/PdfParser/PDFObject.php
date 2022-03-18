@@ -133,7 +133,7 @@ class PDFObject
     public function cleanContent($content, $char = 'X')
     {
         $char = $char[0];
-        $content = str_replace(['\\\\', '\\)', '\\('], $char.$char, $content);
+        $content = str_replace(['\\\\', '\\)', '\\('], $char . $char, $content);
 
         // Remove image bloc with binary content
         preg_match_all('/\s(BI\s.*?(\sID\s).*?(\sEI))\s/s', $content, $matches, PREG_OFFSET_CAPTURE);
@@ -172,7 +172,7 @@ class PDFObject
 
         // Clean BDC and EMC markup
         preg_match_all(
-            '/(\/[A-Za-z0-9\_]*\s*'.preg_quote($char).'*BDC)/s',
+            '/(\/[A-Za-z0-9\_]*\s*' . preg_quote($char) . '*BDC)/s',
             $content,
             $matches,
             PREG_OFFSET_CAPTURE
@@ -197,7 +197,7 @@ class PDFObject
     public function getSectionsText($content)
     {
         $sections = [];
-        $content = ' '.$content.' ';
+        $content = ' ' . $content . ' ';
         $textCleaned = $this->cleanContent($content, '_');
 
         // Extract text blocks.
@@ -211,7 +211,7 @@ class PDFObject
                 $section = substr($content, $offset, \strlen($text));
 
                 // Removes BDC and EMC markup.
-                $section = preg_replace('/(\/[A-Za-z0-9]+\s*<<.*?)(>>\s*BDC)(.*?)(EMC\s+)/s', '${3}', $section.' ');
+                $section = preg_replace('/(\/[A-Za-z0-9]+\s*<<.*?)(>>\s*BDC)(.*?)(EMC\s+)/s', '${3}', $section . ' ');
 
                 $sections[] = $section;
             }
@@ -265,11 +265,11 @@ class PDFObject
 
             foreach ($commands as $command) {
                 switch ($command[self::OPERATOR]) {
-                    // set character spacing
+                        // set character spacing
                     case 'Tc':
                         break;
 
-                    // move text current point
+                        // move text current point
                     case 'Td':
                         $args = preg_split('/\s/s', $command[self::COMMAND]);
                         $y = array_pop($args);
@@ -279,17 +279,17 @@ class PDFObject
                         ) {
                             // vertical offset
                             $text .= "\n";
-                        } elseif (false !== $current_position_td['x'] && (float) $x > (float) (
-                                $current_position_td['x']
+                        } elseif (
+                            false !== $current_position_td['x'] && (float) $x > (float) ($current_position_td['x']
                             )
                         ) {
                             // horizontal offset
-                           $text .= ' ';
+                            $text .= '';
                         }
                         $current_position_td = ['x' => $x, 'y' => $y];
                         break;
 
-                    // move text current point and set leading
+                        // move text current point and set leading
                     case 'TD':
                         $args = preg_split('/\s/s', $command[self::COMMAND]);
                         $y = array_pop($args);
@@ -326,7 +326,7 @@ class PDFObject
                         $text .= $sub_text;
                         break;
 
-                    // set leading
+                        // set leading
                     case 'TL':
                         $text .= ' ';
                         break;
@@ -350,20 +350,20 @@ class PDFObject
                         $current_position_tm = ['x' => $x, 'y' => $y];
                         break;
 
-                    // set super/subscripting text rise
+                        // set super/subscripting text rise
                     case 'Ts':
                         break;
 
-                    // set word spacing
+                        // set word spacing
                     case 'Tw':
                         break;
 
-                    // set horizontal scaling
+                        // set horizontal scaling
                     case 'Tz':
                         $text .= "\n";
                         break;
 
-                    // move to start of next line
+                        // move to start of next line
                     case 'T*':
                         $text .= "\n";
                         break;
@@ -426,7 +426,7 @@ class PDFObject
 
         array_pop(self::$recursionStack);
 
-        return $text.' ';
+        return $text . ' ';
     }
 
     /**
@@ -447,15 +447,15 @@ class PDFObject
 
             foreach ($commands as $command) {
                 switch ($command[self::OPERATOR]) {
-                    // set character spacing
+                        // set character spacing
                     case 'Tc':
                         break;
 
-                    // move text current point
+                        // move text current point
                     case 'Td':
                         break;
 
-                    // move text current point and set leading
+                        // move text current point and set leading
                     case 'TD':
                         break;
 
@@ -482,27 +482,27 @@ class PDFObject
                         $text[] = $sub_text;
                         break;
 
-                    // set leading
+                        // set leading
                     case 'TL':
                         break;
 
                     case 'Tm':
                         break;
 
-                    // set super/subscripting text rise
+                        // set super/subscripting text rise
                     case 'Ts':
                         break;
 
-                    // set word spacing
+                        // set word spacing
                     case 'Tw':
                         break;
 
-                    // set horizontal scaling
+                        // set horizontal scaling
                     case 'Tz':
                         //$text .= "\n";
                         break;
 
-                    // move to start of next line
+                        // move to start of next line
                     case 'T*':
                         //$text .= "\n";
                         break;
@@ -587,8 +587,7 @@ class PDFObject
                         '/^\/([A-Z0-9\._,\+]+\s+[0-9.\-]+)\s+([A-Z]+)\s*/si',
                         substr($text_part, $offset),
                         $matches
-                    )
-                    ) {
+                    )) {
                         $operator = $matches[2];
                         $command = $matches[1];
                         $offset += \strlen($matches[0]);
@@ -596,8 +595,7 @@ class PDFObject
                         '/^\/([A-Z0-9\._,\+]+)\s+([A-Z]+)\s*/si',
                         substr($text_part, $offset),
                         $matches
-                    )
-                    ) {
+                    )) {
                         $operator = $matches[2];
                         $command = $matches[1];
                         $offset += \strlen($matches[0]);
@@ -654,18 +652,18 @@ class PDFObject
                             $ch = $text_part[$strpos];
                             switch ($ch) {
                                 case '\\':
-                                 // REVERSE SOLIDUS (5Ch) (Backslash)
+                                    // REVERSE SOLIDUS (5Ch) (Backslash)
                                     // skip next character
                                     ++$strpos;
                                     break;
 
                                 case '(':
-                                 // LEFT PARENHESIS (28h)
+                                    // LEFT PARENHESIS (28h)
                                     ++$open_bracket;
                                     break;
 
                                 case ')':
-                                 // RIGHT PARENTHESIS (29h)
+                                    // RIGHT PARENTHESIS (29h)
                                     --$open_bracket;
                                     break;
                             }
@@ -689,8 +687,7 @@ class PDFObject
                         '/^\s*(?P<data>([0-9\.\-]+\s*?)+)\s+(?P<id>[A-Z]{1,3})\s*/si',
                         substr($text_part, $offset),
                         $matches
-                    )
-                    ) {
+                    )) {
                         $operator = trim($matches['id']);
                         $command = trim($matches['data']);
                         $offset += \strlen($matches[0]);
@@ -750,7 +747,7 @@ class PDFObject
 
             case 'Font':
                 $subtype = $header->get('Subtype')->getContent();
-                $classname = '\Smalot\PdfParser\Font\Font'.$subtype;
+                $classname = '\Smalot\PdfParser\Font\Font' . $subtype;
 
                 if (class_exists($classname)) {
                     return new $classname($document, $header, $content);
